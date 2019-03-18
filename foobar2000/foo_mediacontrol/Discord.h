@@ -95,7 +95,7 @@ void UpdatePresence(wchar_t *songname, wchar_t *artist, double tracklength, wcha
 		discordPresence.instance = 1;
 
 		if (preferences::get_elapsed()) {
-			discordPresence.startTimestamp = foostarttime;
+			discordPresence.startTimestamp = result;
 		}
 		else {
 			discordPresence.startTimestamp = result;
@@ -130,7 +130,7 @@ void UpdatePresenceSeeked(double seek) {
 		discordPresence.instance = 1;
 
 		if (preferences::get_elapsed()) {
-			discordPresence.startTimestamp = foostarttime;
+			discordPresence.startTimestamp = result - seek;
 		}
 		else {
 			discordPresence.startTimestamp = result;
@@ -169,7 +169,8 @@ void UpdatePresenceResumed() {
 		discordPresence.instance = 1;
 
 		if (preferences::get_elapsed()) {
-			discordPresence.startTimestamp = foostarttime;
+			// TODO: Have time not elapse during pause
+			discordPresence.startTimestamp = result - played;
 		}
 		else {
 			discordPresence.startTimestamp = result;
@@ -203,10 +204,6 @@ void UpdatePresencePaused() {
 			discordPresence.state = savedartist;
 		}
 
-		if (preferences::get_elapsed()) {
-			discordPresence.startTimestamp = foostarttime;
-		}
-
 		discordPresence.instance = 1;
 		Discord_UpdatePresence(&discordPresence);
 	}
@@ -228,9 +225,6 @@ void UpdatePresenceStopped()
 				discordPresence.largeImageText = "Foobar2000";
 				discordPresence.details = "Stopped";
 				discordPresence.instance = 1;
-				if (preferences::get_elapsed()) {
-					discordPresence.startTimestamp = foostarttime;
-				}
 				Discord_UpdatePresence(&discordPresence);
 			}
 			else {
@@ -254,9 +248,6 @@ void UpdatePresenceStopped()
 					discordPresence.state = savedartist;
 				}
 				discordPresence.instance = 1;
-				if (preferences::get_elapsed()) {
-					discordPresence.startTimestamp = foostarttime;
-				}
 				Discord_UpdatePresence(&discordPresence);
 			}
 		}
